@@ -5,7 +5,9 @@ var uiController = (function() {
     inputType: ".add__type",
     inputDescription: ".add__description",
     inputValue: ".add__value",
-    addBtn: ".add__btn"
+    addBtn: ".add__btn",
+    incomeList: ".income__list",
+    expenseList: ".expenses__list"
   };
   return {
     getInput: function() {
@@ -18,23 +20,42 @@ var uiController = (function() {
     getDOMstrings: function() {
       return DOMstrings;
     },
+    clearFields: function() {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputDescription + ", " + DOMstrings.inputValue
+      );
+
+      // Convert List to Array
+      var fieldsArr = Array.prototype.slice.call(fields);
+
+      fieldsArr.forEach(function(el, index, array) {
+        el.value = "";
+      });
+
+      fieldsArr[0].focus();
+
+      // for (var i = 0; i < fieldsArr.length; i++) {
+      //   fieldsArr[i].value = "";
+      // }
+    },
     addListItem: function(item, type) {
-      // орлого зарлагын элэмэнтийг агуулсан html - ийг бэлтгэнэ.
+      // ÐžÑ€Ð»Ð¾Ð³Ð¾ Ð·Ð°Ñ€Ð»Ð°Ð³Ñ‹Ð½ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¸Ð¹Ð³ Ð°Ð³ÑƒÑƒÐ»ÑÐ°Ð½ html-Ð¸Ð¹Ð³ Ð±ÑÐ»Ñ‚Ð³ÑÐ½Ñ.
       var html, list;
       if (type === "inc") {
-        list = ".income__list";
+        list = DOMstrings.incomeList;
         html =
-          '<div class="item clearfix" id="income-%id%"><div class="item__description">%DESCRIPTION%</div><div class="right clearfix"><div class="item__value">%VALUE%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="income-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__delete">            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div>        </div></div>';
       } else {
-        list = ".expenses__list";
+        list = DOMstrings.expenseList;
         html =
-          '<div class="item clearfix" id="expense-%id%"><div class="item__description">%DESCRIPTION%</div><div class="right clearfix"><div class="item__value">%VALUE%</div><div class="item__percentage">10%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="expense-%id%"><div class="item__description">$$DESCRIPTION$$</div>          <div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn">                <i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
-      // тэр html дотроо орлого зарлагын утгуудыг replace ашиглаж өөрчилж өгнө
+      // Ð¢ÑÑ€ HTML Ð´Ð¾Ñ‚Ñ€Ð¾Ð¾ Ð¾Ñ€Ð»Ð¾Ð³Ð¾ Ð·Ð°Ñ€Ð»Ð°Ð³Ñ‹Ð½ ÑƒÑ‚Ð³ÑƒÑƒÐ´Ñ‹Ð³ REPLACE Ð°ÑˆÐ¸Ð³Ð»Ð°Ð¶ Ó©Ó©Ñ€Ñ‡Ð¸Ð»Ð¶
       html = html.replace("%id%", item.id);
-      html = html.replace("%DESCRIPTION%", item.description);
-      html = html.replace("%VALUE%", item.value);
-      // бэлтгэсэн html - ээ dom руу хийж өгнө.
+      html = html.replace("$$DESCRIPTION$$", item.description);
+      html = html.replace("$$VALUE$$", item.value);
+
+      // Ð‘ÑÐ»Ñ‚Ð³ÑÑÑÐ½ HTML ÑÑ DOM Ñ€ÑƒÑƒ Ñ…Ð¸Ð¹Ð¶ Ó©Ð³Ð½Ó©.
       document.querySelector(list).insertAdjacentHTML("beforeend", html);
     }
   };
@@ -98,6 +119,8 @@ var appController = (function(uiController, financeController) {
     );
     //3. олж авсан өгөгдлүүдээ вэб дээрээ тохирох хэсэгт нь гаргана.
     uiController.addListItem(item, input.type);
+    // input field - үүдийг цэвэрлэх
+    uiController.clearFields();
     //4. төсвийг тооцоолно.
     // 5. эцсийн үлдэгдэл, тооцоог дэлгэцэнд гаргана.
   };
