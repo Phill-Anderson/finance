@@ -14,7 +14,7 @@ var uiController = (function() {
       return {
         type: document.querySelector(DOMstrings.inputType).value,
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value
+        value: parseInt(document.querySelector(DOMstrings.inputValue).value)
       };
     },
     getDOMstrings: function() {
@@ -25,7 +25,7 @@ var uiController = (function() {
         DOMstrings.inputDescription + ", " + DOMstrings.inputValue
       );
 
-      // Convert List to Array
+      // LIST өгөгдлийн төрлийг ARRAY болгон хувиргаж байна.
       var fieldsArr = Array.prototype.slice.call(fields);
 
       fieldsArr.forEach(function(el, index, array) {
@@ -111,18 +111,21 @@ var appController = (function(uiController, financeController) {
   var ctrlAddItem = function() {
     //1.оруулах өгөгдлийг дэлгэцээс авна
     var input = uiController.getInput();
-    //2. олж авсан өгөгдлүүдээ санхүүгийн контроллерт дамжуулж тэнд хадгална.
-    var item = financeController.addItem(
-      input.type,
-      input.description,
-      input.value
-    );
-    //3. олж авсан өгөгдлүүдээ вэб дээрээ тохирох хэсэгт нь гаргана.
-    uiController.addListItem(item, input.type);
-    // input field - үүдийг цэвэрлэх
-    uiController.clearFields();
-    //4. төсвийг тооцоолно.
-    // 5. эцсийн үлдэгдэл, тооцоог дэлгэцэнд гаргана.
+
+    if (input.description !== "" && input.value !== "") {
+      //2. олж авсан өгөгдлүүдээ санхүүгийн контроллерт дамжуулж тэнд хадгална.
+      var item = financeController.addItem(
+        input.type,
+        input.description,
+        input.value
+      );
+      //3. олж авсан өгөгдлүүдээ вэб дээрээ тохирох хэсэгт нь гаргана.
+      uiController.addListItem(item, input.type);
+      // input field - үүдийг цэвэрлэх
+      uiController.clearFields();
+      //4. төсвийг тооцоолно.
+      // 5. эцсийн үлдэгдэл, тооцоог дэлгэцэнд гаргана.
+    }
   };
   var setupEventListeners = function() {
     var DOM = uiController.getDOMstrings();
